@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from moviepy.editor import AudioFileClip, CompositeAudioClip
+from moviepy import AudioFileClip, CompositeAudioClip
 
 from geovideo.schemas import AudioConfig
 
