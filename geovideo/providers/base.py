@@ -17,6 +17,7 @@ class TileProvider:
     url_template: str
     attribution: str
     api_key: Optional[str] = None
+    user_agent: Optional[str] = None
     cache_dir: Path = Path(".cache/tiles")
     max_retries: int = 3
     throttle_s: float = 0.1
@@ -39,6 +40,11 @@ class TileProvider:
         draw.text((12, 12), f"{z}/{x}/{y}", fill=(90, 95, 105))
         return image
 
+    def _request_headers(self) -> dict[str, str]:
+        if self.user_agent:
+            return {"User-Agent": self.user_agent}
+        return {"User-Agent": "geovideo/0.1 (+https://github.com/congvm/satellite-video-generation)"}
+
     def get_tile(self, z: int, x: int, y: int) -> Image.Image:
         path = self._cache_path(z, x, y)
         if path.exists():
@@ -51,7 +57,7 @@ class TileProvider:
         for _ in range(self.max_retries):
             try:
                 self._throttle()
-                response = requests.get(url, timeout=10)
+                response = requests.get(url, timeout=10, headers=self._request_headers())
                 response.raise_for_status()
                 image = Image.open(io.BytesIO(response.content)).convert("RGB")
                 image.save(path)
