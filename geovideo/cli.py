@@ -8,7 +8,7 @@ from typing import Optional
 
 import numpy as np
 import typer
-from moviepy.editor import AudioFileClip, VideoClip
+from moviepy import VideoClip
 
 from geovideo.audio import load_audio, mix_audio
 from geovideo.camera import CameraState, auto_camera
@@ -64,7 +64,7 @@ def _render_video(config: InputConfig, seed: Optional[int], fit: str, verbose: b
     tracks = load_audio(config.audio, config.timeline.duration)
     audio = mix_audio(tracks, config.audio)
     if audio:
-        clip = clip.set_audio(audio)
+        clip = clip.with_audio(audio)
 
     output = Path(config.output.path)
     output.parent.mkdir(parents=True, exist_ok=True)

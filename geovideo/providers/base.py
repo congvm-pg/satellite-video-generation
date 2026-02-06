@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import io
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import requests
-from PIL import Image
+from PIL import Image, ImageDraw
 
 
 @dataclass
@@ -28,6 +29,17 @@ class TileProvider:
         if self.throttle_s > 0:
             time.sleep(self.throttle_s)
 
+    def _offline_mode(self) -> bool:
+        value = os.getenv("GEOVIDEO_OFFLINE", "").strip().lower()
+        return value in {"1", "true", "yes", "on"}
+
+    def _placeholder_tile(self, z: int, x: int, y: int) -> Image.Image:
+        image = Image.new("RGB", (256, 256), color=(230, 233, 238))
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((0, 0, 255, 255), outline=(200, 205, 213))
+        draw.text((12, 12), f"{z}/{x}/{y}", fill=(90, 95, 105))
+        return image
+
     def _request_headers(self) -> dict[str, str]:
         if self.user_agent:
             return {"User-Agent": self.user_agent}
@@ -37,6 +49,8 @@ class TileProvider:
         path = self._cache_path(z, x, y)
         if path.exists():
             return Image.open(path).convert("RGB")
+        if self._offline_mode():
+            return self._placeholder_tile(z, x, y)
         url = self.url_template.format(z=z, x=x, y=y, api_key=self.api_key or "")
         path.parent.mkdir(parents=True, exist_ok=True)
         last_error: Optional[Exception] = None
