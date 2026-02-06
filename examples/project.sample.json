@@ -1,0 +1,19 @@
+{
+  "title": "Sample GeoVideo",
+  "scenes": [
+    {
+      "name": "Intro",
+      "camera_path": [
+        {"time_s": 0, "value": 0},
+        {"time_s": 2, "value": 90}
+      ]
+    }
+  ],
+  "camera": {
+    "position": {"lat": 37.7749, "lon": -122.4194},
+    "bearing": 0,
+    "pitch": 45,
+    "roll": 0,
+    "fov": 45
+  }
+}
