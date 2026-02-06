@@ -256,15 +256,35 @@ class Compositor:
         overlay = Image.new("RGBA", (width, height), (0, 0, 0, 35))
         overlay_draw = ImageDraw.Draw(overlay)
         overlay_draw.rectangle((0, 0, width, height), fill=(10, 38, 28, 22))
+
+        # Create top gradient using vectorized numpy operations instead of per-line drawing
         top_gradient_h = int(height * 0.22)
-        for y in range(top_gradient_h):
-            alpha = int(160 * (1.0 - y / max(1, top_gradient_h)))
-            overlay_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+        if top_gradient_h > 0:
+            # Compute alpha values matching the original formula:
+            # alpha = int(160 * (1.0 - y / max(1, top_gradient_h)))
+            y_indices = np.arange(top_gradient_h, dtype=np.float32)
+            denom_top = max(1, top_gradient_h)
+            top_alphas = (160.0 * (1.0 - y_indices / float(denom_top))).clip(0, 255).astype(np.uint8)
+            # Broadcast alphas across the width to form an RGBA image (RGB all zeros, varying alpha)
+            top_gradient = np.zeros((top_gradient_h, width, 4), dtype=np.uint8)
+            top_gradient[:, :, 3] = top_alphas[:, None]
+            top_gradient_img = Image.fromarray(top_gradient, mode="RGBA")
+            overlay.alpha_composite(top_gradient_img, (0, 0))
+
+        # Create bottom gradient using vectorized numpy operations
         bottom_gradient_h = int(height * 0.28)
-        for i in range(bottom_gradient_h):
-            y = height - i - 1
-            alpha = int(195 * (1.0 - i / max(1, bottom_gradient_h)))
-            overlay_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+        if bottom_gradient_h > 0:
+            # Compute alpha values matching the original formula:
+            # for i in range(bottom_gradient_h):
+            #     alpha = int(195 * (1.0 - i / max(1, bottom_gradient_h)))
+            i_indices = np.arange(bottom_gradient_h, dtype=np.float32)
+            denom_bottom = max(1, bottom_gradient_h)
+            bottom_alphas = (195.0 * (1.0 - i_indices / float(denom_bottom))).clip(0, 255).astype(np.uint8)
+            bottom_gradient = np.zeros((bottom_gradient_h, width, 4), dtype=np.uint8)
+            bottom_gradient[:, :, 3] = bottom_alphas[:, None]
+            bottom_gradient_img = Image.fromarray(bottom_gradient, mode="RGBA")
+            bottom_y = height - bottom_gradient_h
+            overlay.alpha_composite(bottom_gradient_img, (0, bottom_y))
         base.alpha_composite(overlay)
 
     def _draw_center_marker(self, draw: ImageDraw.ImageDraw, camera: CameraState) -> None:
