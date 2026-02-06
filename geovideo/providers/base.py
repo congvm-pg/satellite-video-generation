@@ -44,10 +44,7 @@ class TileProvider:
         if path.exists():
             return Image.open(path).convert("RGB")
         if self._offline_mode():
-            image = self._placeholder_tile(z, x, y)
-            path.parent.mkdir(parents=True, exist_ok=True)
-            image.save(path)
-            return image
+            return self._placeholder_tile(z, x, y)
         url = self.url_template.format(z=z, x=x, y=y, api_key=self.api_key or "")
         path.parent.mkdir(parents=True, exist_ok=True)
         last_error: Optional[Exception] = None
