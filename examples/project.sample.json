@@ -1,18 +1,94 @@
 {
-  "title": "Sample GeoVideo",
+  "title": "Sample Flight",
   "scenes": [
     {
-      "name": "Intro",
+      "name": "Downtown glide",
       "camera_path": [
-        {"time_s": 0, "value": 0},
-        {"time_s": 2, "value": 90}
+        {
+          "time_s": 0,
+          "position": {
+            "lat": 37.7749,
+            "lon": -122.4194
+          },
+          "zoom": 11.5,
+          "bearing": 20,
+          "pitch": 45,
+          "roll": 0,
+          "fov": 45,
+          "easing": "linear"
+        },
+        {
+          "time_s": 4,
+          "position": {
+            "lat": 37.7842,
+            "lon": -122.4094
+          },
+          "zoom": 12.3,
+          "bearing": 40,
+          "pitch": 50,
+          "roll": 0,
+          "fov": 45,
+          "easing": "linear"
+        }
+      ],
+      "pois": [
+        {
+          "name": "SF City Hall",
+          "location": {
+            "lat": 37.7793,
+            "lon": -122.4192
+          }
+        },
+        {
+          "name": "Union Square",
+          "location": {
+            "lat": 37.7879,
+            "lon": -122.4075
+          }
+        }
       ]
+    },
+    {
+      "name": "Waterfront sweep",
+      "camera_path": [
+        {
+          "time_s": 0,
+          "position": {
+            "lat": 37.8086,
+            "lon": -122.4098
+          },
+          "zoom": 12.8,
+          "bearing": 95,
+          "pitch": 55,
+          "roll": 0,
+          "fov": 45,
+          "easing": "linear"
+        },
+        {
+          "time_s": 5,
+          "position": {
+            "lat": 37.8044,
+            "lon": -122.4008
+          },
+          "zoom": 13.1,
+          "bearing": 120,
+          "pitch": 60,
+          "roll": 0,
+          "fov": 45,
+          "easing": "linear"
+        }
+      ],
+      "pois": []
     }
   ],
   "camera": {
-    "position": {"lat": 37.7749, "lon": -122.4194},
+    "position": {
+      "lat": 37.7749,
+      "lon": -122.4194
+    },
+    "zoom": 11.0,
     "bearing": 0,
-    "pitch": 45,
+    "pitch": 35,
     "roll": 0,
     "fov": 45
   }
