@@ -17,7 +17,14 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "License :: OSI Approved :: MIT License",
 ]
-dependencies = []
+dependencies = [
+  "moviepy>=1.0",
+  "numpy>=1.24",
+  "opencv-python>=4.8",
+  "pillow>=10.0",
+  "pydantic>=2.5",
+  "typer>=0.9",
+]
 
 [project.optional-dependencies]
 test = ["pytest>=7.4"]
