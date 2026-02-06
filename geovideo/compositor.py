@@ -58,9 +58,11 @@ class Compositor:
         self._draw_center_marker(draw, camera)
         if style.ui_preset == "classic":
             self._draw_subtitle(draw, width, height)
-        self._draw_overlay(base, width, height)
         if style.ui_preset == "social_map" and style.show_social_chrome:
+            # In social_map preset, prioritize social chrome over the overlay to avoid visual conflicts.
             self._draw_social_chrome(draw, width, height)
+        else:
+            self._draw_overlay(base, width, height)
         self._draw_attribution(draw, width, height)
         array = np.array(base.convert("RGB"))
         return cv2.cvtColor(array, cv2.COLOR_RGB2BGR)
