@@ -45,6 +45,13 @@ class StyleConfig(BaseModel):
     overlay_path: Optional[str] = None
     watermark_text: str = "© OpenStreetMap contributors"
     safe_margin_px: int = 80
+    ui_preset: Literal["classic", "social_map"] = "classic"
+    social_search_left_text: str = "Thiên Minh"
+    social_search_right_text: str = "Tìm kiếm"
+    social_center_label: str = "Vị trí lô đất"
+    social_account_label: str = "Thiên Minh"
+    social_zoom_factor: float = 1.0
+    show_social_chrome: bool = True
 
 
 class TimelineConfig(BaseModel):
